@@ -13,18 +13,20 @@ import {
   Button,
 } from "./carousel.styles";
 import { useElementWidth } from "../hooks/useElementWidth";
+import { useIsMobile } from "../hooks/useIsMobile";
 
 export const Carousel: React.FC = observer(() => {
   const postStore = usePostStore();
   const componentRef = useRef(null);
   const { width } = useElementWidth(componentRef);
   const [commentsChange, setCommentsChange] = useState(false);
+  const isMobile = useIsMobile();
 
   const swipeHandlers = useSwipeable({
     onSwipedLeft: () => postStore.handleSlideNext(),
     onSwipedRight: () => postStore.handleSlidePrev(),
     preventDefaultTouchmoveEvent: true,
-    trackMouse: true,
+    trackMouse: isMobile ? true : false,
   });
 
   useEffect(() => {
