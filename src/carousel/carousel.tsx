@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useMemo, useRef } from "react";
 import { observer } from "mobx-react-lite";
 import { useSwipeable } from "react-swipeable";
+import { CSSTransition } from "react-transition-group";
 
 import { usePostStore } from "../providers/RootStoreProvider";
 import { useKeypress } from "../hooks/useKeyPress";
@@ -11,6 +12,11 @@ import {
   CommentsWrapper,
   CommentBox,
   Button,
+  StyledCommentsList,
+  CommentsListItem,
+  CommentTitle,
+  TransitionBox,
+  StyledTitle,
 } from "./carousel.styles";
 import { useElementWidth } from "../hooks/useElementWidth";
 import { useIsMobile } from "../hooks/useIsMobile";
@@ -54,7 +60,7 @@ export const Carousel: React.FC = observer(() => {
     return postStore.posts.map((post) => {
       return (
         <PostWrapper key={post.id}>
-          <h2>{post.title}</h2>
+          <StyledTitle>{post.title}</StyledTitle>
           <p>{post.body}</p>
         </PostWrapper>
       );
@@ -63,17 +69,30 @@ export const Carousel: React.FC = observer(() => {
 
   const postCommentsList = (
     <div>
-      <CommentsWrapper shouldBeAnimated={commentsChange}>
-        <h2>Comments</h2>
-        {postStore.postComments &&
-          postStore.postComments.comments.map((comment) => {
-            return (
-              <CommentBox key={comment.id}>
-                <p>{comment.name}</p>
-                <p>{comment.body}</p>
-              </CommentBox>
-            );
-          })}
+      <CommentsWrapper>
+        <StyledTitle>Comments</StyledTitle>
+        <StyledCommentsList>
+          {postStore.postComments &&
+            postStore.postComments.comments.map((comment) => {
+              return (
+                <CommentsListItem key={comment.id}>
+                  <CSSTransition
+                    in={!commentsChange}
+                    classNames="fade"
+                    timeout={600}
+                    unmountOnExit
+                  >
+                    <TransitionBox>
+                      <CommentBox>
+                        <CommentTitle>{comment.name}</CommentTitle>
+                        <p>{comment.body}</p>
+                      </CommentBox>
+                    </TransitionBox>
+                  </CSSTransition>
+                </CommentsListItem>
+              );
+            })}
+        </StyledCommentsList>
       </CommentsWrapper>
     </div>
   );
@@ -91,8 +110,18 @@ export const Carousel: React.FC = observer(() => {
 
       <div>{postCommentsList}</div>
       <div>
-        <Button onClick={() => postStore.handleSlidePrev()}>Prev</Button>
-        <Button onClick={() => postStore.handleSlideNext()}>Next</Button>
+        <Button
+          onClick={() => postStore.handleSlidePrev()}
+          disabled={postStore.activePost === 0}
+        >
+          Prev
+        </Button>
+        <Button
+          onClick={() => postStore.handleSlideNext()}
+          disabled={postStore.activePost === postStore.posts.length - 1}
+        >
+          Next
+        </Button>
       </div>
     </MainWrapper>
   );

@@ -11,6 +11,10 @@ export const MainWrapper = styled.div`
   }
 `;
 
+export const StyledTitle = styled.h2`
+  font-size: 1.5rem;
+`;
+
 export const SliderWrapper = styled.div<{ translation: number }>`
   display: inline-flex;
   transition: all 0.5s ease-in-out;
@@ -26,13 +30,11 @@ export const PostWrapper = styled.div`
   flex: 0 0 100%;
 `;
 
-export const CommentsWrapper = styled.div<{ shouldBeAnimated: boolean }>`
+export const CommentsWrapper = styled.div`
   background: #000;
   color: #fff;
   padding: 1rem;
   margin-bottom: 1rem;
-  transition: all 0.3s ease;
-  opacity: ${({ shouldBeAnimated }) => (shouldBeAnimated ? "0.5" : "1")};
 `;
 
 export const CommentBox = styled.div``;
@@ -52,4 +54,48 @@ export const Button = styled.button`
     background: #000;
     color: #fff;
   }
+
+  &:disabled {
+    pointer-events: none;
+    opacity: 0.5;
+  }
 `;
+
+export const StyledCommentsList = styled.ul`
+  list-style-type: none;
+  padding: 0;
+  text-align: left;
+`;
+
+export const CommentsListItem = styled.li`
+  border-bottom: 1px solid #fff;
+`;
+
+export const CommentTitle = styled.h3`
+  text-align: center;
+  font-size: 1.2rem;
+`;
+
+export const TransitionBox = styled.div`
+  transition: opacity 0.3s;
+
+  // enter from
+  &.fade-enter {
+    opacity: 0;
+  }
+
+  // enter to
+  &.fade-enter-active {
+    opacity: 1;
+  }
+
+  // exit from
+  &.fade-exit {
+    opacity: 1;
+  }
+
+  // exit to 
+  &.fade-exit-active {
+    opacity: 0;
+  }
+}`;
